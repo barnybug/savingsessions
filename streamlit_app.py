@@ -22,6 +22,7 @@ def ss(timestamp: str, hh: int, reward: int):
 SAVING_SESSIONS = [
     ss("2023-11-16 17:30", 2, 1800),
     ss("2023-11-29 17:00", 3, 3200),
+    ss("2023-12-01 16:30", 2, 3200),
 ]
 
 
