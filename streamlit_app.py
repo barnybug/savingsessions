@@ -111,11 +111,11 @@ def results(api_key):
     except AuthenticationError:
         error("Authentication error, check your API key")
 
-    bar.progress(0.05, text="Getting account...")
+    bar.progress(0.05, text="Getting newest account...")
     accounts = api.accounts()
     if not accounts:
         error("No accounts found")
-    account = accounts[0]
+    account = accounts[-1]
     debug(account)
 
     bar.progress(0.07, text="Getting sessions...")
