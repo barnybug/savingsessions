@@ -95,7 +95,8 @@ def get_account_number(api_key):
     accounts = api.accounts()
     if not accounts:
         error("No accounts found")
-    account = accounts[0]
+    # use most recent account in case they have had multiple accounts
+    account = accounts[-1] 
     return account.number
 
 
