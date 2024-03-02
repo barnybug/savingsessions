@@ -77,7 +77,7 @@ class Calculation:
     ):
         # Baseline from meter readings from the same time as the Session over the past 10 weekdays (excluding any days
         # with a Saving Session), past 4 weekend days if Saving Session is on a weekend.
-        days_required = 10 if weekday(self.ss.startAt) else 4
+        days_required = 10 if self.is_weekday else 4
         previous_session_days = {ss.startAt.date() for ss in sessions}
         previous = pendulum.period(self.ss.startAt.subtract(days=1), self.ss.startAt.subtract(days=61))
 
@@ -131,10 +131,11 @@ class Calculation:
 
         if baseline_import:
             self.baseline_import = np.asarray(baseline_import)
-            self.baseline = self.baseline_import.mean(axis=0)
+            self.baseline = self.avg_baseline_import
+
             if baseline_export:
                 self.baseline_export = np.asarray(baseline_export)
-                self.baseline = self.baseline - self.baseline_export.mean(axis=0)
+                self.baseline = self.baseline - self.avg_baseline_export
 
             if self.session_import is not None:
                 session = self.session_import
@@ -161,6 +162,28 @@ class Calculation:
             ret["earnings"] = reward / 800
         return ret
 
+    @property
+    def is_weekday(self) -> bool:
+        return weekday(self.ss.startAt)
+
+    @property
+    def avg_baseline_import(self):
+        if self.baseline_import is None:
+            raise ValueError("baseline_import missing")
+        if self.is_weekday:
+            return self.baseline_import.mean(axis=0)
+        # weekend: the mean average of the 2 median days will be taken
+        return np.median(self.baseline_import, axis=0)
+
+    @property
+    def avg_baseline_export(self):
+        if self.baseline_export is None:
+            raise ValueError("baseline_export missing")
+        if self.is_weekday:
+            return self.baseline_export.mean(axis=0)
+        # weekend: the mean average of the 2 median days will be taken
+        return np.median(self.baseline_export, axis=0)
+
     def dbrow(self, id_lookup: dict):
         ret = {
             "saving_session_id": id_lookup[self.ss.code],
@@ -170,9 +193,9 @@ class Calculation:
         if self.session_export is not None:
             ret["session_export"] = self.session_export.sum()
         if self.baseline_import is not None:
-            ret["baseline_import"] = self.baseline_import.mean(axis=0).sum()
+            ret["baseline_import"] = self.avg_baseline_import.sum()
         if self.baseline_export is not None:
-            ret["baseline_export"] = self.baseline_export.mean(axis=0).sum()
+            ret["baseline_export"] = self.avg_baseline_export.sum()
         if self.points is not None:
             ret["points"] = int(self.points.sum())
         return ret

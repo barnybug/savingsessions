@@ -237,9 +237,9 @@ def results(api_key):
 
             data = {"Time": timestamps}
             if calc.baseline_import is not None:
-                data["Baseline import"] = calc.baseline_import.mean(axis=0).round(3)
+                data["Baseline import"] = calc.avg_baseline_import.round(3)
             if calc.baseline_export is not None:
-                data["Baseline export"] = calc.baseline_export.mean(axis=0).round(3)
+                data["Baseline export"] = calc.avg_baseline_export.round(3)
             if calc.session_import is not None:
                 data["Session import"] = calc.session_import
             if calc.session_export is not None:
