@@ -125,6 +125,9 @@ def results(api_key):
     if not res.signedUpMeterPoint:
         error("Sorry, it looks like you haven't a meter point for saving sessions.")
     now = pendulum.now()
+    
+    res.sessions.sort(key=lambda sessions: sessions.startAt, reverse=True)
+    
     all_sessions = res.sessions
     sessions = [session for session in res.sessions if session.id in res.joinedEvents or session.startAt > now]
     if not sessions:
