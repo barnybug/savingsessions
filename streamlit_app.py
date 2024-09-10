@@ -37,8 +37,8 @@ def main():
 
     st.subheader("Your Octopus API Key")
     st.markdown("Find this in your online dashboard: https://octopus.energy/dashboard/developer/")
-    if "api_key" not in st.session_state and (api_key := st.experimental_get_query_params().get("api_key")):
-        st.session_state["api_key"] = api_key[0]
+    if "api_key" not in st.session_state and (api_key := st.query_params.get("api_key")):
+        st.session_state["api_key"] = api_key
     api_key = st.text_input("API key:", key="api_key", placeholder="sk_live_...")
     if not api_key:
         st.info(
@@ -48,9 +48,8 @@ def main():
         )
         st.stop()
 
-    if st.experimental_get_query_params().get("api_key") != api_key:
-        params = st.experimental_get_query_params() | {"api_key": api_key}
-        st.experimental_set_query_params(**params)
+    if st.query_params.get("api_key") != api_key:
+        st.query_params["api_key"] = api_key
 
     st.info("Tip: bookmark this url to return with your API key remembered.", icon="🔖")
 
@@ -101,7 +100,7 @@ def get_account_number(api_key):
 
 @st.cache_data(ttl="600s", show_spinner=False)
 def results(api_key):
-    debug = debug_message if "debug" in st.experimental_get_query_params() else debug_noop
+    debug = debug_message if "debug" in st.query_params else debug_noop
     bar = st.progress(0, text="Authenticating...")
 
     api = API()

@@ -16,9 +16,8 @@ def app():
         points = session["points"]
         return f"{timestamp:%A %d %b %Y at %H:%M} ({points} points)"
 
-    params = st.experimental_get_query_params()
-    if "session" not in st.session_state and (param := params.get("session")):
-        st.session_state["session"] = param[0]
+    if "session" not in st.session_state and (param := st.query_params.get("session")):
+        st.session_state["session"] = param
 
     code = st.selectbox(
         "Select session",
@@ -29,9 +28,8 @@ def app():
     if not code:
         return
 
-    if params.get("session") != code:
-        params = params | {"session": code}
-        st.experimental_set_query_params(**params)
+    if st.query_params.get("session") != code:
+        st.query_params["session"] = code
 
     results = db.results(code_to_id[code])
     if not results:
