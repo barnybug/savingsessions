@@ -1,3 +1,7 @@
+import datetime
+from dataclasses import dataclass
+
+import pendulum
 import streamlit as st
 import supabase
 from postgrest.exceptions import APIError
@@ -10,13 +14,34 @@ def session():
     return supabase.create_client(url, key)
 
 
-@st.cache_data(ttl=600)
+@st.cache_data(ttl=600, show_spinner=False)
 def saving_sessions():
     response = session().table("saving_sessions").select("*").order("timestamp", desc=True).execute()
     return response.data
 
 
-@st.cache_data(ttl=600)
+@dataclass
+class FreeSession:
+    id: int
+    timestamp: datetime.datetime
+    duration: int
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def free_sessions():
+    response = session().table("free_sessions").select("*").order("timestamp", desc=True).execute()
+    rows = [
+        FreeSession(
+            id=row["id"],
+            timestamp=pendulum.parse(row["timestamp"]),
+            duration=row["duration"],
+        )
+        for row in response.data
+    ]
+    return rows
+
+
+@st.cache_data(ttl=600, show_spinner=False)
 def results(ss_id):
     response = (
         session()

@@ -10,25 +10,7 @@ from savingsessions.api import (
     AuthenticationError,
     ElectricityMeterPoint,
 )
-
-
-@st.cache_data(ttl=None)  # never expire
-def get_product(code: str):
-    api = API()  # unauthenticated
-    return api.energy_product(code)
-
-
-def error(msg: str):
-    st.error(msg, icon="⚠️")
-    st.stop()
-
-
-def debug_message(msg):
-    st.write(msg)
-
-
-def debug_noop(msg):
-    pass
+from savingsessions.ui import debug_message, debug_noop, error, get_account_number, get_product
 
 
 def main():
@@ -82,20 +64,6 @@ def main():
 
             st.write("🎉 Entered! Go check out your placement in the [league tables](/League)")
             db.results.clear()  # expire cache
-
-
-def get_account_number(api_key):
-    api = API()
-    try:
-        api.authenticate(api_key)
-    except AuthenticationError:
-        error("Authentication error, check your API key")
-
-    accounts = api.accounts()
-    if not accounts:
-        error("No accounts found")
-    account = accounts[0]
-    return account.number
 
 
 @st.cache_data(ttl="600s", show_spinner=False)
@@ -185,10 +153,10 @@ def results(api_key):
             start + ticks_per_session,
         )
         debug(f"session: {ss}")
-        calc = calculation.Calculation(ss)
-        calc.calculate(api, all_sessions, import_readings, export_readings, ticks, debug)
+        calc = calculation.Calculation.saving_session(ss, all_sessions)
+        calc.calculate(api, import_readings, export_readings, ticks, debug)
         calcs.append(calc)
-        rows.append(calc.row())
+        rows.append(calc.saving_session_row())
 
         # Update in place
         with placeholder.container():
