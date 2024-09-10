@@ -120,6 +120,7 @@ def results(api_key):
                     "baseline": st.column_config.NumberColumn("Baseline", format="%.2f kWh"),
                     "free": st.column_config.NumberColumn("Free", format="%.2f kWh"),
                 },
+                width=600,
             )
 
     bar.progress(1.0, text="Done")
