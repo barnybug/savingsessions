@@ -1,6 +1,6 @@
 # 🐙 Octopus Saving Sessions calculator
 
-The official ZeroRinse :tm: Saving Session calculator.
+An unofficial Octopus :tm: Saving Session calculator.
 
 ## Running locally
 
