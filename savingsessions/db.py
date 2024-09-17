@@ -27,7 +27,7 @@ class FreeSession:
     duration: int
 
 
-@st.cache_data(ttl=600, show_spinner=False)
+@st.cache_data(ttl=300, show_spinner=False)
 def free_sessions():
     response = session().table("free_sessions").select("*").order("timestamp", desc=True).execute()
     rows = [
