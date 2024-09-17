@@ -41,6 +41,10 @@ def free_sessions():
     return rows
 
 
+def insert_free_session(row):
+    session().table("free_sessions").insert(row).execute()
+
+
 @st.cache_data(ttl=600, show_spinner=False)
 def results(ss_id):
     response = (

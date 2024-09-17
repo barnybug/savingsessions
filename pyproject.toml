@@ -11,6 +11,7 @@ streamlit = "^1.38.0"
 pendulum = "^2.1.2"
 rich = "^13.7.0"
 supabase = "^2.2.1"
+dateparser = "^1.2.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.6"
@@ -18,3 +19,6 @@ ruff = "^0.1.6"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+check_free_electricity = "savingsessions.scripts.check_free_electricity:main"
