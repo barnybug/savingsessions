@@ -11,7 +11,7 @@ from .. import db
 def main():
     resp = urllib.request.urlopen("https://octopus.energy/free-electricity/")
     body = resp.read().decode("utf-8")
-    if m := re.search(r"⚡️\s*\b(.+) (\d+)([ap]m)?-(\d+)([ap]m)\b\s*⚡️", body):
+    if m := re.search(r"⚡️\s*\b.+(\w+ \d+\w* \w+) (\d+)([ap]m)?-(\d+)([ap]m)\b\s*⚡️", body):
         if m.group(3):
             date_from = m.expand(r"\1 \2\3")
         else:
