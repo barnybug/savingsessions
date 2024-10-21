@@ -54,12 +54,15 @@ def results(api_key):
     accounts = api.accounts()
     if not accounts:
         error("No accounts found")
-    account = accounts[0]
-    debug(account)
 
-    bar.progress(0.1, text="Getting meters...")
-    agreements = api.agreements(account.number)
-    if not agreements:
+    for account in accounts:
+        debug(account)
+
+        bar.progress(0.1, text="Getting meters...")
+        agreements = api.agreements(account.number)
+        if agreements:
+            break
+    else:
         error("No agreements on account")
 
     bar.progress(0.15, text="Getting tariffs...")

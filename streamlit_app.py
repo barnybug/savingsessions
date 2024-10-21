@@ -81,10 +81,18 @@ def results(api_key):
     accounts = api.accounts()
     if not accounts:
         error("No accounts found")
-    account = accounts[0]
-    debug(account)
 
-    bar.progress(0.07, text="Getting sessions...")
+    for account in accounts:
+        debug(account)
+
+        bar.progress(0.07, text="Getting meters...")
+        agreements = api.agreements(account.number)
+        if agreements:
+            break
+    else:
+        error("No agreements on account")
+
+    bar.progress(0.1, text="Getting sessions...")
     res = api.saving_sessions(account.number)
     debug(res)
     if not res.hasJoinedCampaign:
@@ -96,11 +104,6 @@ def results(api_key):
     sessions = [session for session in res.sessions if session.id in res.joinedEvents or session.startAt > now]
     if not sessions:
         error("Not joined any saving sessions yet.")
-
-    bar.progress(0.1, text="Getting meters...")
-    agreements = api.agreements(account.number)
-    if not agreements:
-        error("No agreements on account")
 
     bar.progress(0.15, text="Getting tariffs...")
     import_mpan = None
