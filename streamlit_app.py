@@ -13,6 +13,9 @@ from savingsessions.api import (
 from savingsessions.ui import debug_message, debug_noop, error, get_account_number, get_product
 
 
+SESSION_START = pendulum.datetime(2024, 12, 1)
+
+
 def main():
     st.set_page_config(page_icon="🐙", page_title="Octopus Saving Sessions calculator")
     st.header("🐙 Octopus Saving Sessions calculator")
@@ -101,9 +104,11 @@ def results(api_key):
         error("Sorry, it looks like you haven't a meter point for saving sessions.")
     now = pendulum.now()
     all_sessions = res.sessions
-    sessions = [session for session in res.sessions if session.id in res.joinedEvents or session.startAt > now]
+    # Filter to this season
+    sessions = [session for session in res.sessions if session.startAt > SESSION_START]
+    sessions = [session for session in sessions if session.id in res.joinedEvents or session.startAt > now]
     if not sessions:
-        error("Not joined any saving sessions yet.")
+        error("Not joined any saving sessions yet this season.")
 
     bar.progress(0.15, text="Getting tariffs...")
     import_mpan = None
