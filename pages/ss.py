@@ -65,7 +65,7 @@ def app():
                 rows = [calc.dbrow(id_lookup) | common for calc in complete]
                 db.upsert_results(rows)
 
-            st.write("🎉 Entered! Go check out your placement in the [league tables](/League)")
+            st.write("🎉 Entered! Go check out your placement in the [league tables](/league)")
             db.results.clear()  # expire cache
 
 
