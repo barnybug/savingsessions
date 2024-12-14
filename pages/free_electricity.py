@@ -13,7 +13,7 @@ from savingsessions.api import (
 from savingsessions.ui import debug_message, debug_noop, error, get_account_number, get_product
 
 
-def main():
+def app():
     st.set_page_config(page_icon="🆓", page_title="Octopus Free Electricity calculator")
     st.header("🆓 Octopus Free Electricity calculator")
 
@@ -129,5 +129,4 @@ def results(api_key):
     bar.progress(1.0, text="Done")
 
 
-if __name__ == "__main__":
-    main()
+app()
