@@ -181,7 +181,7 @@ def results(api_key):
         with st.expander(f"Session {ss.startAt:%b %d %Y} breakdown"):
             timestamps = [
                 ts.strftime("%H:%M")
-                for ts in pendulum.period(ss.startAt, ss.endAt - pendulum.duration(minutes=30)).range("minutes", 30)
+                for ts in pendulum.interval(ss.startAt, ss.endAt - pendulum.duration(minutes=30)).range("minutes", 30)
             ]
             days = [f"{day:%b %d}" for day in calc.baseline_days]
 

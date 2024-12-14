@@ -25,7 +25,7 @@ class Readings:
         self.hh = {}
 
     def get_readings(self, api: API, ts: datetime, hh: int, debug):
-        half_hours = list(pendulum.period(ts, ts + phh(hh - 1)).range("minutes", 30))
+        half_hours = list(pendulum.interval(ts, ts + phh(hh - 1)).range("minutes", 30))
         if not self.requested.issuperset(half_hours):
             start_at = ts - phh(100 - hh)
             debug(f"Fetching {self.meter_point.mpan} readings from {start_at}")
@@ -40,10 +40,10 @@ class Readings:
             )
             if readings:
                 debug(f"Received {len(readings)} readings from {readings[0].startAt} to {readings[-1].endAt}")
-                self.requested.update(pendulum.period(start_at, readings[-1].startAt).range("minutes", 30))
+                self.requested.update(pendulum.interval(start_at, readings[-1].startAt).range("minutes", 30))
             else:
                 debug("Received no readings")
-                self.requested.update(pendulum.period(start_at, start_at + phh(99)).range("minutes", 30))
+                self.requested.update(pendulum.interval(start_at, start_at + phh(99)).range("minutes", 30))
 
             for reading in readings:
                 self.hh[reading.startAt] = reading.value
@@ -101,7 +101,7 @@ class Calculation:
         # Baseline from meter readings from the same time as the Session over the past 10 weekdays (excluding any days
         # with a Saving Session), past 4 weekend days if Saving Session is on a weekend.
         days_required = 10 if self.is_weekday else 4
-        previous = pendulum.period(self.start.subtract(days=1), self.start.subtract(days=61))
+        previous = pendulum.interval(self.start.subtract(days=1), self.start.subtract(days=61))
 
         try:
             self.session_import = import_readings.get_readings(api, self.start, self.duration, debug)
