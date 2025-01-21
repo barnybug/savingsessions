@@ -234,7 +234,7 @@ def results(api_key):
         if "reward" in row:
             continue
         ts = row["session"]
-        st.info(f"Session on {ts:%Y/%m/%d} is awaiting readings...", icon="⌛")
+        st.info(f"Session on {ts} is awaiting readings...", icon="⌛")
 
     return calcs
 
