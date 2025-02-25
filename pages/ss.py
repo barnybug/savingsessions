@@ -109,6 +109,7 @@ def results(api_key):
     sessions = [session for session in sessions if session.id in res.joinedEvents or session.startAt > now]
     if not sessions:
         error("Not joined any saving sessions yet this season.")
+    sessions.sort(key=lambda s: s.startAt, reverse=True)
 
     bar.progress(0.15, text="Getting tariffs...")
     import_mpan = None
