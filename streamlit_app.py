@@ -17,11 +17,13 @@ SESSION_START = pendulum.datetime(2024, 12, 1)
 
 
 def main():
-    pg = st.navigation([
-        st.Page("pages/ss.py", title="Saving Sessions", icon="🐙"),
-        st.Page("pages/league.py", title="League", icon="🏆"),
-        st.Page("pages/free_electricity.py", title="Free Electricity", icon="🆓"),
-    ])
+    pg = st.navigation(
+        [
+            st.Page("pages/ss.py", title="Saving Sessions", icon="🐙"),
+            st.Page("pages/league.py", title="League", icon="🏆"),
+            st.Page("pages/free_electricity.py", title="Free Electricity", icon="🆓"),
+        ]
+    )
     pg.run()
 
 

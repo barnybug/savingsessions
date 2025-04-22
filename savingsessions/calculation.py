@@ -11,9 +11,21 @@ def phh(hh: int):
     return pendulum.duration(minutes=hh * 30)
 
 
+def bank_holiday(day):
+    return str(day) in {
+        "2025-04-18",
+        "2025-04-21",
+        "2025-05-05",
+        "2025-05-26",
+        "2025-08-25",
+        "2025-12-25",
+        "2025-12-26",
+    }
+
+
 def weekday(day):
-    """True if day is a weekday"""
-    return pendulum.MONDAY <= day.day_of_week <= pendulum.FRIDAY
+    """True if day is a weekday (excluding bank holidays)"""
+    return pendulum.MONDAY <= day.day_of_week <= pendulum.FRIDAY and not bank_holiday(day.date())
 
 
 class Readings:
